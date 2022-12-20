@@ -5,11 +5,11 @@ import plotly.express as px
 from PIL import Image
 import requests
 import random
-import json
-import matplotlib.pyplot as plt
-import seaborn as sns
-import geopandas
-import plotly.figure_factory as ff
+# import json
+# import matplotlib.pyplot as plt
+# import seaborn as sns
+# import geopandas
+# import plotly.figure_factory as ff
 
 # df = pd.read_csv('./data/athlete_events.csv')
 df = pd.read_csv('./data/athlete_events.zip',compression='zip')
