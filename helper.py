@@ -50,32 +50,43 @@ def most_successful(df, sport):
     x.rename(columns={'index': 'Name', 'Name_x': 'Medals'}, inplace=True)
     return x
 
-# def athletes_countries(df) :
-#
-#     # Number of athletes by country
-#     athletes = df[['Name','Team']]
-#     athletes_country = athletes.groupby('Team').count().reset_index()
-#     athletes_country.columns = ['country', 'count']                    # Set the correct variables'names
-#     athletes_country = athletes_country.sort_values('count', ascending = False)
-#     athletes_country.country = athletes_country.country.replace("United States","United States of America")
-#     athletes_country.country = athletes_country.country.replace("Great Britain","United Kingdom")
-#     athletes_country.country = athletes_country.country.replace("Czechoslovakia","Czechia")
-#     athletes_country.country = athletes_country.country.replace("West Germany","Germany")
-#     athletes_country.country = athletes_country.country.replace("Soviet Union","Russia")
-#
-#     # geopandas
-#     world = geopandas.read_file(geopandas.datasets.get_path("naturalearth_lowres"))
-#     athletes_country_final = world.merge(athletes_country, how = 'left', left_on=['name'], right_on=['country'])
-#
-#     return athletes_country_final
-#
-# def medals_countries(df) :
-#     medal_country = fetch_medal_tally(df, "Overall", "Overall")
-#     medal_country.region = medal_country.region.replace("USA","United States of America")
-#     medal_country.region = medal_country.region.replace("UK","United Kingdom")
-#
-#     # # geopandas
-#     world = geopandas.read_file(geopandas.datasets.get_path("naturalearth_lowres"))
-#     medals_country_final = world.merge(medal_country, how = 'left', left_on=['name'], right_on=['region'])
-#     return medals_country_final
+def yearwise_medal_tally(df,country):
+    temp_df = df.dropna(subset=['Medal'])
+    temp_df.drop_duplicates(subset=['Team', 'NOC', 'Games', 'Year', 'City', 'Sport', 'Event', 'Medal'], inplace=True)
 
+    new_df = temp_df[temp_df['region'] == country]
+    final_df = new_df.groupby('Year').count()['Medal'].reset_index()
+
+    return final_df
+
+def country_event_heatmap(df,country):
+    temp_df = df.dropna(subset=['Medal'])
+    temp_df.drop_duplicates(subset=['Team', 'NOC', 'Games', 'Year', 'City', 'Sport', 'Event', 'Medal'], inplace=True)
+
+    new_df = temp_df[temp_df['region'] == country]
+
+    pt = new_df.pivot_table(index='Sport', columns='Year', values='Medal', aggfunc='count').fillna(0)
+    return pt
+
+def most_successful_countrywise(df, country):
+    temp_df = df.dropna(subset=['Medal'])
+
+    temp_df = temp_df[temp_df['region'] == country]
+
+    x = temp_df['Name'].value_counts().reset_index().head(10).merge(df, left_on='index', right_on='Name', how='left')[
+        ['index', 'Name_x', 'Sport']].drop_duplicates('index')
+    x.rename(columns={'index': 'Name', 'Name_x': 'Medals'}, inplace=True)
+    return x
+
+def men_vs_women(df):
+    athlete_df = df.drop_duplicates(subset=['Name', 'region'])
+
+    men = athlete_df[athlete_df['Sex'] == 'M'].groupby('Year').count()['Name'].reset_index()
+    women = athlete_df[athlete_df['Sex'] == 'F'].groupby('Year').count()['Name'].reset_index()
+
+    final = men.merge(women, on='Year', how='left')
+    final.rename(columns={'Name_x': 'Male', 'Name_y': 'Female'}, inplace=True)
+
+    final.fillna(0, inplace=True)
+
+    return final
