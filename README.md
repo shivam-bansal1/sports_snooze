@@ -21,6 +21,7 @@ The file athlete_events.csv contains 271116 rows and 15 columns. Each row corres
 1. Sport - Sport
 1. Event - Event
 1. Medal - Gold, Silver, Bronze, or NA <br>
+
 The file noc_regions.csv contains 230 rows and 3 columns. Each row corresponds to an individual region. The columns are:
 
 1. NOC (National Olympic Committee 3 letter code)
@@ -31,7 +32,7 @@ The data for Tokyo 2020 Olympics is obtained from [here](https://www.kaggle.com/
 
 ## Python Web App
 This project is deployed on Streamlit Community Cloud. You can access the web app [Sports_Snooze](https://shivam-bansal1-sports-snooze-app-3tyvgn.streamlit.app/).<br>
-** Note: All the graphs and charts are interactive. You can hover over the graphs and charts to get more information. You can also download the graphs and charts in png format. **
+**Note: All the graphs and charts are interactive. You can hover over the graphs and charts to get more information. You can also download the graphs and charts in png format.**
 
 
 ## Features of the Web App
